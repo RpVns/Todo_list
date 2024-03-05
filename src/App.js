@@ -7,24 +7,32 @@ function App() {
   const [description, setDescription] = useState('');
   const [showUpdate, setShowUpdate] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
+  const [showUpdateDeleteIndex, setShowUpdateDeleteIndex] = useState(null);
   const [updateMode, setUpdateMode] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleAddTask = () => {
-    if (updateMode) {
-      // Update existing task
-      const updatedTasks = [...tasks];
-      updatedTasks[deleteIndex] = { title, description };
-      setTasks(updatedTasks);
-      setUpdateMode(false);
+    // Check if both title and description are non-empty
+    if (title.trim() !== '' && description.trim() !== '') {
+      if (updateMode) {
+        // Update existing task
+        const updatedTasks = [...tasks];
+        updatedTasks[deleteIndex] = { title, description };
+        setTasks(updatedTasks);
+        setUpdateMode(false);
+      } else {
+        // Add new task
+        const newTask = { title, description };
+        setTasks([...tasks, newTask]);
+      }
+      setTitle('');
+      setDescription('');
     } else {
-      // Add new task
-      const newTask = { title, description };
-      setTasks([...tasks, newTask]);
+      // Display an alert or handle the validation error as needed
+      
     }
-    setTitle('');
-    setDescription('');
   };
+  
 
   const handleDeleteTask = () => {
     const updatedTasks = tasks.filter((task, index) => index !== deleteIndex);
@@ -85,12 +93,12 @@ function App() {
         ) : (
           tasks.map((task, index) => (
             <div className="task" key={index} style={{ backgroundColor: '#242320', border: 'px solid #A35709' }}>
-              <div>
+              <div className='task-content'>
                 <div style={{ fontWeight: 'bold', backgroundColor: '#242320' }}>{task.title}</div>
                 <div style={{ fontSize: '0.8em', backgroundColor: '#242320' }}>{task.description}</div>
               </div>
-              <div>
-                {showUpdate ? (
+              <div className='update-delete'>
+                {showUpdateDeleteIndex === index ? (
                   <div>
                     <button onClick={handleUpdateTask}><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="35" height="35" rx="5.5" fill="#2B2A27" stroke="#A35709" />
@@ -113,7 +121,7 @@ function App() {
                 ) : (
                   <button onClick={() => {
                     setDeleteIndex(index);
-                    setShowUpdate(true);
+                    setShowUpdateDeleteIndex(index);
                   }}>
                     <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="35" height="35" rx="5.5" fill="#2B2A27" stroke="#A35709" />
